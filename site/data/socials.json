@@ -1,0 +1,166 @@
+{
+  "socials": [
+    {
+      "date": "2026-01-14",
+      "place": "Gott's",
+      "link": "https://www.gotts.com",
+      "location": "https://maps.app.goo.gl/oHbu5myVY7zYsnp77",
+      "notes": "Maybe not the best for drinks, really just a burger place",
+      "skipped": false
+    },
+    {
+      "date": "2026-01-21",
+      "place": "The Rose & Crown",
+      "link": "https://www.therosepa.com/",
+      "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
+      "notes": "Great for drinks and darts!",
+      "skipped": false
+    },
+    {
+      "date": "2026-01-28",
+      "place": "The Rose & Crown",
+      "link": "https://www.therosepa.com/",
+      "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
+      "notes": "We went back again for Anya's birthday!",
+      "skipped": false
+    },
+    {
+      "date": "2026-02-04",
+      "place": "Skipped",
+      "link": "",
+      "location": "",
+      "notes": "Erywunbizze",
+      "skipped": true
+    },
+    {
+      "date": "2026-02-11",
+      "place": "Nola",
+      "link": "https://www.nolas.com/",
+      "location": "",
+      "notes": "Good for larger crowds and decent happy hour drinks",
+      "skipped": false
+    },
+    {
+      "date": "2026-02-18",
+      "place": "Skipped",
+      "link": "",
+      "location": "",
+      "notes": "Skipped for Chinese New Year Celebration",
+      "skipped": true
+    },
+    {
+      "date": "2026-02-25",
+      "place": "The Rose & Crown",
+      "link": "https://www.therosepa.com/",
+      "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
+      "notes": "It's becoming a thing",
+      "skipped": false
+    },
+    {
+      "date": "2026-03-04",
+      "place": "Bar Underdog",
+      "link": "https://barunderdogpa.com/",
+      "location": "https://maps.app.goo.gl/T5AmitHkmNnLrFJHA",
+      "notes": "Cool trendy spot, but a little small",
+      "skipped": false
+    },
+    {
+      "date": "2026-10-29",
+      "place": "Treehouse",
+      "link": "https://www.treehouseatstanford.com/",
+      "location": "https://maps.app.goo.gl/k8DRVZh29qrxxwaV7",
+      "notes": "Stanford campus staple and fall back to beat travel time across town",
+      "skipped": false
+    }
+  ],
+  "places": [
+    {
+      "name": "Bar Underdog",
+      "link": "https://barunderdogpa.com/",
+      "location": "https://maps.app.goo.gl/H1s5HYzt9L7pCuy9A",
+      "visited": false,
+      "happy_hour": "weekdays 4pm-5:30pm",
+      "happy_hour_notes": "$10 cocktails from a select menu"
+    },
+    {
+      "name": "Coconuts",
+      "link": "https://www.coconutspaloalto.com",
+      "location": "https://maps.app.goo.gl/zkMEbpVdDbaah53s9",
+      "visited": false,
+      "happy_hour": "Mon-Fri 4-6pm",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "Gott's",
+      "link": "https://www.gotts.com",
+      "location": "https://maps.app.goo.gl/oHbu5myVY7zYsnp77",
+      "visited": true,
+      "happy_hour": "",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "Hidden Tap and Barrel",
+      "link": "https://hiddentapandbarrel.com/",
+      "location": "https://maps.app.goo.gl/axQjupQjbkX2oyGa9",
+      "visited": false,
+      "happy_hour": "",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "Nola",
+      "link": "https://www.nolas.com/",
+      "location": "https://maps.app.goo.gl/XqcpwtvW6TkVJZo78",
+      "visited": true,
+      "happy_hour": "weekdays 3-6pm",
+      "happy_hour_notes": "Happy hour details are from memory, as they do not list it on their website at the moment."
+    },
+    {
+      "name": "Pacific Catch",
+      "link": "https://pacificcatch.com/",
+      "location": "https://maps.app.goo.gl/orrdfBYwHNYqHy129",
+      "visited": false,
+      "happy_hour": "Mon - Fri 3-6pm",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "Pizzeria Delfina",
+      "link": "https://www.pizzeriadelfina.com/location/palo-alto/",
+      "location": "https://maps.app.goo.gl/SKNRtSmvoXk8eUy47",
+      "visited": false,
+      "happy_hour": "",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "Rossotti’s Alpine Inn",
+      "link": "http://www.alpineinnpv.com/",
+      "location": "https://maps.app.goo.gl/ZgLrvQrYYka25Lr19",
+      "visited": false,
+      "happy_hour": "Tue-Fri 2:30-5:30pm (in the tavern)",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "The Pro",
+      "link": "https://thepropaloalto.com",
+      "location": "https://www.google.com/maps/place/The+Pro/@37.4447673,-122.1613641,17z/data=!4m15!1m8!3m7!1s0x808fbb94007a54ff:0xe01e9ef93700c73f!2sThe+Pro!8m2!3d37.4449685!4d-122.1611671!10e5!16s%2Fg%2F11n5334_8b!3m5!1s0x808fbb94007a54ff:0xe01e9ef93700c73f!8m2!3d37.4449685!4d-122.1611671!16s%2Fg%2F11n5334_8b?entry=ttu&g_ep=EgoyMDI2MDMwNS4wIKXMDSoASAFQAw%3D%3D",
+      "visited": false,
+      "happy_hour": "weekdays 3-5pm",
+      "happy_hour_notes": "https://thepropaloalto.com/wp-content/uploads/Amateur-Hour.pdf"
+    },
+    {
+      "name": "Vino Locale",
+      "link": "https://vinolocale.com",
+      "location": "https://maps.app.goo.gl/kWbrmB4sP2hMGthQ9",
+      "visited": true,
+      "happy_hour": "Daily 3-5:30pm",
+      "happy_hour_notes": ""
+    },
+    {
+      "name": "Wildseed",
+      "link": "https://wildseedsf.com/",
+      "location": "https://maps.app.goo.gl/1VGbDC1uzwpyV5jF7",
+      "visited": true,
+      "happy_hour": "Mon-Fri 4-6pm",
+      "happy_hour_notes": ""
+    }
+  ]
+}

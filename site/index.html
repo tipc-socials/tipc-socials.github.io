@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TIPC Socials</title>
+  <meta name="description" content="Where the TIPC weekly social is this week, and everywhere we've been.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍻</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="masthead">
+    <span class="wordmark">TIPC socials</span>
+  </header>
+
+  <main>
+    <section class="next" id="next" aria-live="polite">
+      <p class="next-when">Loading this week's spot…</p>
+    </section>
+
+    <div class="lower">
+      <section class="tab" aria-labelledby="tab-title">
+        <div class="receipt">
+          <h2 id="tab-title" class="receipt-title">The tab</h2>
+          <p class="receipt-sub">Every week we've been out</p>
+          <ol class="receipt-lines" id="history"></ol>
+          <dl class="receipt-totals" id="totals"></dl>
+          <p class="receipt-thanks">Thank you, come again</p>
+        </div>
+      </section>
+
+      <section class="menu" aria-labelledby="menu-title">
+        <h2 id="menu-title">Places on the list</h2>
+        <p class="menu-sub">Happy hours worth knowing about.</p>
+        <h3 class="menu-group">Not tried yet</h3>
+        <ul class="menu-items" id="places-new"></ul>
+        <h3 class="menu-group">Been there</h3>
+        <ul class="menu-items" id="places-been"></ul>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Pulled from the group's Google Sheet about every 30 minutes.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
