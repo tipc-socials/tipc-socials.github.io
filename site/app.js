@@ -234,6 +234,7 @@
         ]
           .filter(Boolean)
           .join(", ");
+        const { mostVisited } = tally(rows);
 
         const items = [];
         for (let i = 0; i < rows.length; i++) {
@@ -249,7 +250,17 @@
         return el(
           "details",
           { class: "year", open: open.has(year) },
-          el("summary", {}, el("span", { class: "year-label" }, year), el("span", { class: "year-count" }, count)),
+          el(
+            "summary",
+            {},
+            el("span", { class: "year-label" }, year),
+            el(
+              "span",
+              { class: "year-count" },
+              el("span", {}, count),
+              mostVisited && el("span", { class: "year-top" }, `Most visited: ${mostVisited}`)
+            )
+          ),
           el("ol", { class: "rows" }, ...items)
         );
       })
@@ -257,30 +268,33 @@
     if (!years.length) container.append(el("p", { class: "status" }, "Nothing on the schedule yet."));
   }
 
-  function renderStats(socials) {
-    const past = socials.filter(isPast);
-    const rounds = past.filter(isVenue);
-
-    // Visits per place; ties go to whichever was visited most recently.
+  // Socials held, distinct spots, and the most visited spot (only when some
+  // place has been visited more than once; ties go to the most recent).
+  function tally(rows) {
+    const rounds = rows.filter((s) => isVenue(s) && isPast(s)).sort((a, b) => a.date.localeCompare(b.date));
     const visits = new Map();
     rounds.forEach((s, i) => {
       const v = visits.get(s.place) || { count: 0, last: 0 };
       visits.set(s.place, { count: v.count + 1, last: i });
     });
-    const [regular, top] =
-      [...visits].sort((a, b) => b[1].count - a[1].count || b[1].last - a[1].last)[0] || [];
+    const [name, top] = [...visits].sort((a, b) => b[1].count - a[1].count || b[1].last - a[1].last)[0] || [];
+    return {
+      socials: rounds.length,
+      spots: visits.size,
+      mostVisited: top && top.count > 1 ? `${name} (${top.count} visits)` : null,
+    };
+  }
 
-    const stat = (n, label) => el("li", {}, el("strong", {}, n), " " + label);
-    const stats = [
-      stat(rounds.length, rounds.length === 1 ? "social" : "socials"),
-      stat(visits.size, visits.size === 1 ? "spot" : "different spots"),
+  function renderStats(socials) {
+    const t = tally(socials);
+    const rows = [
+      ["Total socials", t.socials],
+      ["Different locations", t.spots],
     ];
-    if (top && top.count > 1) {
-      stats.push(
-        el("li", { class: "stat-regular" }, "Our regular: ", el("strong", {}, regular), ` (${top.count} visits)`)
-      );
-    }
-    document.getElementById("stats").replaceChildren(...(rounds.length ? stats : []));
+    if (t.mostVisited) rows.push(["Most visited", t.mostVisited]);
+    document
+      .getElementById("stats")
+      .replaceChildren(...(t.socials ? rows.flatMap(([k, v]) => [el("dt", {}, k), el("dd", {}, v)]) : []));
   }
 
   function renderPlaces(places, socials) {

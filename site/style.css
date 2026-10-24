@@ -87,6 +87,24 @@ button:focus-visible {
 
 .tagline a { color: var(--white); }
 
+.header-stats {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 16px;
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 0.9375rem;
+}
+
+.header-stats dt { color: rgba(255, 255, 255, 0.75); }
+
+.header-stats dd {
+  margin: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 .tagline a:hover { color: var(--fog); }
 
 .masthead :focus-visible { outline-color: var(--white); }
@@ -135,28 +153,6 @@ main.wrap { padding-top: 44px; }
 
 .status.error { color: var(--cardinal); }
 
-/* ---------- Stats ---------- */
-
-.stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 0 0 24px;
-  padding: 0;
-  list-style: none;
-}
-
-.stats li {
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: var(--fog-light);
-  color: var(--cool-grey);
-}
-
-.stats strong { color: var(--black); font-weight: 700; }
-
-.stats .stat-regular { background: var(--cardinal-tint); }
-
 /* ---------- Schedule ---------- */
 
 .year { border-top: 1px solid var(--fog); }
@@ -195,6 +191,10 @@ main.wrap { padding-top: 44px; }
 }
 
 .year-count {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: right;
   margin-left: auto;
   color: var(--cool-grey);
   font-size: 0.9375rem;
