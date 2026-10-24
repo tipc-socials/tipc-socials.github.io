@@ -129,7 +129,7 @@ def row_kind(place):
         return "skip"
     if p == "break":
         return "break"
-    if "skip" in p:  # e.g. "Potential skip"
+    if re.search(r"(?<![\w-])skip(?![\w-])", p):  # "Potential skip", not "Skippers"
         return "maybe"
     return "venue"
 
@@ -148,7 +148,10 @@ def parse_socials(text):
             continue
         place = get("place")
         # A GIF column wins; otherwise look for a Giphy link in the notes.
-        _, gif = split_gif(get("gif") or get("giphy link"))
+        gif_cell = get("gif") or get("giphy link")
+        _, gif = split_gif(gif_cell)
+        if gif_cell and not gif:
+            print(f"::warning::Weekly log row {row_num}: ignored GIF '{gif_cell}' (not a Giphy link)")
         notes, note_gif = split_gif(get("notes"))
         gif = gif or note_gif
         rows.append(

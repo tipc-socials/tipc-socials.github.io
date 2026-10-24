@@ -88,6 +88,26 @@
     return `In ${days} days`;
   }
 
+  // GIFs load and play only while on screen (rows in collapsed years never
+  // load); with reduced motion they stay still until pointed at or focused.
+  const gifObserver = new IntersectionObserver((entries) => {
+    for (const { target: video, isIntersecting } of entries) {
+      if (isIntersecting && !video.src) {
+        video.poster = `https://media.giphy.com/media/${video.dataset.gif}/giphy_s.gif`;
+        video.src = `https://media.giphy.com/media/${video.dataset.gif}/giphy.mp4`;
+      }
+      if (reduceMotion) continue;
+      if (isIntersecting) playQuietly(video);
+      else video.pause();
+    }
+  });
+
+  function playQuietly(video) {
+    // play() rejects if pause() interrupts it; that's expected here.
+    const playing = video.play();
+    if (playing) playing.catch(() => {});
+  }
+
   // A Giphy GIF as a small looping video; hovering enlarges it.
   function gifThumb(id) {
     if (!/^[A-Za-z0-9]+$/.test(id || "")) return null;
@@ -103,18 +123,19 @@
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
-    video.poster = `https://media.giphy.com/media/${id}/giphy_s.gif`;
-    video.src = `https://media.giphy.com/media/${id}/giphy.mp4`;
+    video.preload = "none";
+    video.dataset.gif = id;
     video.setAttribute("aria-hidden", "true");
     if (reduceMotion) {
-      // Still frame until someone points at it.
-      video.preload = "none";
-      a.addEventListener("mouseenter", () => video.play());
-      a.addEventListener("mouseleave", () => video.pause());
-    } else {
-      video.autoplay = true;
+      const play = () => playQuietly(video);
+      const stop = () => video.pause();
+      a.addEventListener("mouseenter", play);
+      a.addEventListener("focus", play);
+      a.addEventListener("mouseleave", stop);
+      a.addEventListener("blur", stop);
     }
     a.append(video);
+    gifObserver.observe(video);
     return a;
   }
 
