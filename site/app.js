@@ -14,10 +14,6 @@
     return new Date(now.getFullYear(), now.getMonth(), now.getDate());
   }
 
-  function fmt(date, opts) {
-    return date.toLocaleDateString("en-US", opts);
-  }
-
   function normalize(name) {
     return name.toLowerCase().replace(/[’']/g, "'").replace(/\s+/g, " ").trim();
   }
@@ -32,10 +28,11 @@
     for (const [key, value] of Object.entries(attrs || {})) {
       if (value === undefined || value === null || value === false) continue;
       if (key === "class") node.className = value;
+      else if (value === true) node.setAttribute(key, "");
       else node.setAttribute(key, value);
     }
     for (const child of children) {
-      if (child === null || child === undefined || child === false) continue;
+      if (child === null || child === undefined || child === false || child === "") continue;
       node.append(child instanceof Node ? child : String(child));
     }
     return node;
@@ -47,153 +44,115 @@
     return el("a", { href, target: "_blank", rel: "noopener", ...attrs }, text);
   }
 
-  function whenPhrase(date) {
+  function plural(n, word) {
+    return `${n} ${word}${n === 1 ? "" : "s"}`;
+  }
+
+  function nextFlag(date) {
     const days = Math.round((date - today()) / DAY_MS);
-    const full = fmt(date, { weekday: "long", month: "long", day: "numeric" });
-    if (days === 0) return [el("span", { class: "soon" }, "Tonight"), ", " + full];
-    if (days === 1) return [el("span", { class: "soon" }, "Tomorrow"), ", " + full];
-    if (days < 7) return ["This " + full];
-    return [full];
+    if (days === 0) return "Next up: tonight";
+    if (days === 1) return "Next up: tomorrow";
+    if (days < 7) return `Next up: this ${date.toLocaleDateString("en-US", { weekday: "long" })}`;
+    return `Next up: in ${days} days`;
   }
 
-  function renderNext(socials) {
-    const section = document.getElementById("next");
-    const now = today();
-    const upcoming = socials.filter((s) => !s.skipped && toDate(s.date) >= now);
-    const past = socials.filter((s) => !s.skipped && toDate(s.date) < now);
-    section.replaceChildren();
+  function renderRow(s, isNext) {
+    const date = toDate(s.date);
+    const upcoming = date >= today();
+    const classes = ["row"];
+    if (s.skipped) classes.push("is-skipped");
+    if (upcoming) classes.push("is-upcoming");
+    if (isNext) classes.push("is-next");
 
-    if (!upcoming.length) {
-      const last = past[past.length - 1];
-      section.append(
-        el("p", { class: "next-when" }, "This week"),
-        el("h1", { class: "next-place is-tbd" }, "Spot not picked yet"),
-        last &&
-          el(
-            "p",
-            { class: "next-notes" },
-            `Last time we were at ${last.place} on ${fmt(toDate(last.date), { month: "long", day: "numeric" })}.`
-          )
-      );
-      return;
+    let actions = null;
+    if (isNext) {
+      actions = el("p", { class: "row-actions" });
+      if (safeUrl(s.location)) actions.append(link(s.location, "Directions"));
+      if (safeUrl(s.link)) actions.append(link(s.link, "Website"));
+      if (!actions.childElementCount) actions = null;
     }
 
-    const next = upcoming[0];
-    const actions = el("div", { class: "next-actions" });
-    if (safeUrl(next.location)) {
-      actions.append(link(next.location, "Get directions", { class: "button primary" }));
-    }
-    if (safeUrl(next.link)) {
-      actions.append(link(next.link, "Visit website", { class: "button" }));
-    }
-
-    section.append(
-      el("p", { class: "next-when" }, ...whenPhrase(toDate(next.date))),
-      el("h1", { class: "next-place" }, next.place),
-      next.notes && el("p", { class: "next-notes" }, next.notes),
-      actions.childElementCount ? actions : null
+    return el(
+      "li",
+      { class: classes.join(" ") },
+      el(
+        "time",
+        { class: "row-date", datetime: s.date },
+        date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })
+      ),
+      el(
+        "div",
+        { class: "row-body" },
+        isNext && el("p", { class: "row-flag" }, nextFlag(date)),
+        el("p", { class: "row-place" }, s.skipped ? "Skipped" : isNext ? s.place : link(s.link || s.location, s.place)),
+        s.notes && el("p", { class: "row-note" }, s.notes),
+        actions
+      )
     );
-
-    const later = upcoming.slice(1);
-    if (later.length) {
-      section.append(
-        el(
-          "ul",
-          { class: "also", "aria-label": "Also coming up" },
-          ...later.map((s) =>
-            el(
-              "li",
-              {},
-              fmt(toDate(s.date), { weekday: "short", month: "short", day: "numeric" }) + ": ",
-              el("strong", {}, s.place)
-            )
-          )
-        )
-      );
-    }
   }
 
-  function renderTab(socials) {
+  function renderSchedule(socials) {
     const now = today();
-    const past = socials.filter((s) => toDate(s.date) < now).reverse();
-    const list = document.getElementById("history");
+    const thisYear = now.getFullYear();
+    const next = socials.find((s) => !s.skipped && toDate(s.date) >= now);
 
-    list.replaceChildren(
-      ...past.map((s) => {
-        const date = toDate(s.date);
-        const showYear = date.getFullYear() !== now.getFullYear();
-        const label = fmt(date, { month: "short", day: "numeric", ...(showYear && { year: "2-digit" }) });
+    const byYear = new Map();
+    for (const s of socials) {
+      const year = toDate(s.date).getFullYear();
+      if (!byYear.has(year)) byYear.set(year, []);
+      byYear.get(year).push(s);
+    }
+    const years = [...byYear.keys()].sort((a, b) => b - a);
+
+    // Open this year plus any year with something coming up; if neither has
+    // rows (e.g. early January), open the most recent year instead.
+    const open = new Set(years.filter((y) => y === thisYear || byYear.get(y).some((s) => toDate(s.date) >= now)));
+    if (!open.size && years.length) open.add(years[0]);
+
+    const container = document.getElementById("schedule");
+    container.replaceChildren(
+      ...years.map((year) => {
+        const rows = byYear.get(year).slice().sort((a, b) => b.date.localeCompare(a.date));
+        const skipped = rows.filter((s) => s.skipped).length;
+        const count = plural(rows.length - skipped, "social") + (skipped ? `, ${skipped} skipped` : "");
         return el(
-          "li",
-          { class: "line" + (s.skipped ? " is-skipped" : "") },
-          el(
-            "div",
-            { class: "line-main" },
-            el("time", { class: "line-date", datetime: s.date }, label),
-            el("span", { class: "line-place" }, s.skipped ? "Skipped" : link(s.link || s.location, s.place))
-          ),
-          s.notes && el("p", { class: "line-note" }, s.notes)
+          "details",
+          { class: "year", open: open.has(year) },
+          el("summary", {}, el("span", { class: "year-label" }, year), el("span", { class: "year-count" }, count)),
+          el("ol", { class: "rows" }, ...rows.map((s) => renderRow(s, s === next)))
         );
       })
     );
-    if (!past.length) list.append(el("li", { class: "line" }, "Nothing on the tab yet."));
-
-    const rounds = past.filter((s) => !s.skipped);
-    const counts = new Map();
-    for (const s of rounds) counts.set(s.place, (counts.get(s.place) || 0) + 1);
-    const [regular, regularCount] = [...counts].sort((a, b) => b[1] - a[1])[0] || [];
-
-    const totals = [
-      ["Rounds", rounds.length],
-      ["Places", counts.size],
-      ["Skipped", past.length - rounds.length],
-    ];
-    if (regularCount > 1) totals.push(["Regular", `${regular} ×${regularCount}`]);
-
-    document
-      .getElementById("totals")
-      .replaceChildren(...totals.flatMap(([k, v]) => [el("dt", {}, k), el("dd", {}, v)]));
+    if (!years.length) container.append(el("p", { class: "status" }, "Nothing on the schedule yet."));
   }
 
   function renderPlaces(places, socials) {
     const now = today();
-    const beenTo = new Set(
-      socials.filter((s) => !s.skipped && toDate(s.date) < now).map((s) => normalize(s.place))
+    const beenTo = new Set(socials.filter((s) => !s.skipped && toDate(s.date) < now).map((s) => normalize(s.place)));
+    const been = (p) => p.visited || beenTo.has(normalize(p.name));
+
+    // Untried spots first.
+    const sorted = places.slice().sort((a, b) => been(a) - been(b) || a.name.localeCompare(b.name));
+
+    const list = document.getElementById("places");
+    list.replaceChildren(
+      ...sorted.map((p) => {
+        const notesUrl = safeUrl(p.happy_hour_notes);
+        const links = el("div", { class: "place-links" });
+        if (safeUrl(p.location)) links.append(link(p.location, "Directions"));
+        if (notesUrl) links.append(link(notesUrl, "Happy hour menu"));
+
+        return el(
+          "li",
+          { class: "place" },
+          el("p", { class: "place-name" }, link(p.link, p.name), been(p) && el("span", { class: "place-been" }, "Been there")),
+          el("p", { class: "place-hours" }, p.happy_hour ? `Happy hour ${p.happy_hour}` : "Happy hour unknown"),
+          !notesUrl && p.happy_hour_notes && el("p", { class: "place-notes" }, p.happy_hour_notes),
+          links.childElementCount ? links : null
+        );
+      })
     );
-
-    const item = (p) => {
-      const hoursText = p.happy_hour ? `Happy hour ${p.happy_hour}` : "Happy hour unknown";
-      const notesUrl = safeUrl(p.happy_hour_notes);
-      const meta = [];
-      if (safeUrl(p.location)) meta.push(link(p.location, "Directions"));
-      if (notesUrl) meta.push(link(notesUrl, "Happy hour menu"));
-      else if (p.happy_hour_notes) meta.push(el("span", {}, p.happy_hour_notes));
-
-      return el(
-        "li",
-        { class: "item" },
-        el(
-          "div",
-          { class: "item-row" },
-          link(p.link, p.name, { class: "item-name" }),
-          el("span", { class: "item-leader", "aria-hidden": "true" }),
-          el("span", { class: "item-hours" + (p.happy_hour ? "" : " is-empty") }, hoursText)
-        ),
-        meta.length > 0 &&
-          el("p", { class: "item-meta" }, ...meta)
-      );
-    };
-
-    const been = places.filter((p) => p.visited || beenTo.has(normalize(p.name)));
-    const fresh = places.filter((p) => !been.includes(p));
-
-    const fill = (id, rows, empty) => {
-      const ul = document.getElementById(id);
-      ul.replaceChildren(...rows.map(item));
-      if (!rows.length) ul.append(el("li", { class: "item item-meta" }, empty));
-    };
-    fill("places-new", fresh, "We've been everywhere on the list. Add more to the sheet.");
-    fill("places-been", been, "Nowhere yet.");
+    if (!sorted.length) list.append(el("li", { class: "place" }, "No places on the list yet."));
   }
 
   fetch("data/socials.json", { cache: "no-cache" })
@@ -202,15 +161,12 @@
       return res.json();
     })
     .then((data) => {
-      renderNext(data.socials);
-      renderTab(data.socials);
+      renderSchedule(data.socials);
       renderPlaces(data.places || [], data.socials);
     })
     .catch(() => {
       document
-        .getElementById("next")
-        .replaceChildren(
-          el("p", { class: "next-when error" }, "Couldn't load the socials list. Refresh to try again.")
-        );
+        .getElementById("schedule")
+        .replaceChildren(el("p", { class: "status error" }, "Couldn't load the schedule. Refresh to try again."));
     });
 })();
