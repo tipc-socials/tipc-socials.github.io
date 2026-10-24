@@ -78,7 +78,7 @@
       "name": "Bar Underdog",
       "link": "https://barunderdogpa.com/",
       "location": "https://maps.app.goo.gl/H1s5HYzt9L7pCuy9A",
-      "visited": false,
+      "visited": true,
       "happy_hour": "weekdays 4pm-5:30pm",
       "happy_hour_notes": "$10 cocktails from a select menu"
     },
