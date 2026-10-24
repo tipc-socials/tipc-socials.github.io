@@ -113,8 +113,16 @@
     container.replaceChildren(
       ...years.map((year) => {
         const rows = byYear.get(year).slice().sort((a, b) => b.date.localeCompare(a.date));
-        const skipped = rows.filter((s) => s.skipped).length;
-        const count = plural(rows.length - skipped, "social") + (skipped ? `, ${skipped} skipped` : "");
+        const past = rows.filter((s) => toDate(s.date) < now);
+        const skipped = past.filter((s) => s.skipped).length;
+        const upcoming = rows.length - past.length;
+        const count = [
+          plural(past.length - skipped, "social"),
+          skipped && `${skipped} skipped`,
+          upcoming && `${upcoming} coming up`,
+        ]
+          .filter(Boolean)
+          .join(", ");
         return el(
           "details",
           { class: "year", open: open.has(year) },
@@ -124,6 +132,34 @@
       })
     );
     if (!years.length) container.append(el("p", { class: "status" }, "Nothing on the schedule yet."));
+  }
+
+  function renderStats(socials) {
+    const now = today();
+    const past = socials.filter((s) => toDate(s.date) < now);
+    const rounds = past.filter((s) => !s.skipped);
+
+    // Visits per place; ties go to whichever was visited most recently.
+    const visits = new Map();
+    rounds.forEach((s, i) => {
+      const v = visits.get(s.place) || { count: 0, last: 0 };
+      visits.set(s.place, { count: v.count + 1, last: i });
+    });
+    const [regular, top] =
+      [...visits].sort((a, b) => b[1].count - a[1].count || b[1].last - a[1].last)[0] || [];
+
+    const stat = (n, label) => el("li", {}, el("strong", {}, n), " " + label);
+    const stats = [
+      stat(rounds.length, rounds.length === 1 ? "social" : "socials"),
+      stat(visits.size, visits.size === 1 ? "spot" : "different spots"),
+      stat(past.length - rounds.length, "skipped"),
+    ];
+    if (top && top.count > 1) {
+      stats.push(
+        el("li", { class: "stat-regular" }, "Our regular: ", el("strong", {}, regular), ` (${top.count} visits)`)
+      );
+    }
+    document.getElementById("stats").replaceChildren(...(rounds.length ? stats : []));
   }
 
   function renderPlaces(places, socials) {
@@ -155,6 +191,14 @@
     if (!sorted.length) list.append(el("li", { class: "place" }, "No places on the list yet."));
   }
 
+  // Click the raccoon to throw again (restart the CSS animation).
+  const scene = document.querySelector(".scene");
+  scene.addEventListener("click", () => {
+    scene.classList.remove("is-playing");
+    void scene.offsetWidth;
+    scene.classList.add("is-playing");
+  });
+
   fetch("data/socials.json", { cache: "no-cache" })
     .then((res) => {
       if (!res.ok) throw new Error(res.status);
@@ -162,6 +206,7 @@
     })
     .then((data) => {
       renderSchedule(data.socials);
+      renderStats(data.socials);
       renderPlaces(data.places || [], data.socials);
     })
     .catch(() => {
