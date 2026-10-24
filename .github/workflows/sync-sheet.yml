@@ -2,7 +2,7 @@ name: Sync sheet and deploy
 
 on:
   schedule:
-    - cron: "*/30 * * * *" # pull the Google Sheet
+    - cron: "7,37 * * * *" # pull the Google Sheet (off the busy :00/:30 marks)
     - cron: "17 6 1 * *" # monthly keepalive (see last step of the sync job)
   push:
     branches: [main]
