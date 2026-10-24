@@ -16,6 +16,7 @@ Usage:
 import csv
 import io
 import json
+import re
 import sys
 import urllib.request
 from datetime import datetime
@@ -102,6 +103,37 @@ def clean_url(value):
     return ""
 
 
+# Giphy links in any of their shapes: /embed/ID, /gifs/some-title-ID,
+# media.giphy.com/media/ID/giphy.gif, i.giphy.com/ID.gif
+GIPHY_RE = re.compile(
+    r"https?://(?:www\.|media\d?\.|i\.)?giphy\.com/"
+    r"(?:embed/|gifs/(?:[\w-]*-)?|media/(?:v1\.[^/]+/)?)?([A-Za-z0-9]{8,})[^\s]*"
+)
+
+
+def split_gif(notes):
+    """Pull a Giphy link out of the notes. Returns (notes_without_link, gif_id)."""
+    match = GIPHY_RE.search(notes)
+    if not match:
+        return notes, ""
+    rest = notes[: match.start()] + notes[match.end() :]
+    return " ".join(rest.split()), match.group(1)
+
+
+def row_kind(place):
+    """What a Place cell means: a real venue, or one of the schedule keywords."""
+    p = place.strip().lower()
+    if p in ("", "tbd", "tba", "?"):
+        return "tbd"
+    if p in ("skip", "skipped"):
+        return "skip"
+    if p == "break":
+        return "break"
+    if "skip" in p:  # e.g. "Potential skip"
+        return "maybe"
+    return "venue"
+
+
 def parse_socials(text):
     rows, errors = [], []
     for row_num, get in read_table(
@@ -115,18 +147,16 @@ def parse_socials(text):
             )
             continue
         place = get("place")
-        if not place:
-            errors.append(f"Weekly log row {row_num}: 'Place' is empty")
-            continue
+        notes, gif = split_gif(get("notes"))
         rows.append(
             {
                 "date": date.isoformat(),
                 "place": place,
+                "kind": row_kind(place),
                 "link": clean_url(get("link")),
                 "location": clean_url(get("location")),
-                "notes": get("notes"),
-                "skipped": place.lower() == "skipped",
-                "tbd": place.lower() in ("tbd", "tba", "?"),
+                "notes": notes,
+                "gif": gif,
             }
         )
 

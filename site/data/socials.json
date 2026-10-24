@@ -3,92 +3,164 @@
     {
       "date": "2026-01-14",
       "place": "Gott's",
+      "kind": "venue",
       "link": "https://www.gotts.com",
       "location": "https://maps.app.goo.gl/oHbu5myVY7zYsnp77",
       "notes": "Maybe not the best for drinks, really just a burger place",
-      "skipped": false,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-01-21",
       "place": "The Rose & Crown",
+      "kind": "venue",
       "link": "https://www.therosepa.com/",
       "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
       "notes": "Great for drinks and darts!",
-      "skipped": false,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-01-28",
       "place": "The Rose & Crown",
+      "kind": "venue",
       "link": "https://www.therosepa.com/",
       "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
       "notes": "We went back again for Anya's birthday!",
-      "skipped": false,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-02-04",
-      "place": "Skipped",
+      "place": "Skip",
+      "kind": "skip",
       "link": "",
       "location": "",
       "notes": "Erywunbizze",
-      "skipped": true,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-02-11",
       "place": "Nola",
+      "kind": "venue",
       "link": "https://www.nolas.com/",
       "location": "https://maps.app.goo.gl/2uHEicBEtt2Tz7Rw7",
       "notes": "Good for larger crowds and decent happy hour drinks",
-      "skipped": false,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-02-18",
-      "place": "Skipped",
+      "place": "Skip",
+      "kind": "skip",
       "link": "",
       "location": "",
       "notes": "Skipped for Chinese New Year Celebration",
-      "skipped": true,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-02-25",
       "place": "The Rose & Crown",
+      "kind": "venue",
       "link": "https://www.therosepa.com/",
       "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
       "notes": "It's becoming a thing",
-      "skipped": false,
-      "tbd": false
+      "gif": ""
     },
     {
       "date": "2026-03-04",
       "place": "Bar Underdog",
+      "kind": "venue",
       "link": "https://barunderdogpa.com/",
       "location": "https://maps.app.goo.gl/T5AmitHkmNnLrFJHA",
       "notes": "Cool trendy spot, but a little small",
-      "skipped": false,
-      "tbd": false
+      "gif": ""
+    },
+    {
+      "date": "2026-03-11",
+      "place": "",
+      "kind": "tbd",
+      "link": "",
+      "location": "",
+      "notes": "Summer Break. Future dates TBD.",
+      "gif": ""
     },
     {
       "date": "2026-10-29",
       "place": "Treehouse",
+      "kind": "venue",
       "link": "https://www.treehouseatstanford.com/",
       "location": "https://maps.app.goo.gl/k8DRVZh29qrxxwaV7",
-      "notes": "Stanford campus staple and fall back to beat travel time across town",
-      "skipped": false,
-      "tbd": false
+      "notes": "",
+      "gif": "l0ExeaaG2bRt9qKCQ"
     },
     {
       "date": "2026-11-05",
       "place": "TBD",
+      "kind": "tbd",
       "link": "",
       "location": "",
       "notes": "",
-      "skipped": false,
-      "tbd": true
+      "gif": ""
+    },
+    {
+      "date": "2026-11-12",
+      "place": "",
+      "kind": "tbd",
+      "link": "",
+      "location": "",
+      "notes": "",
+      "gif": ""
+    },
+    {
+      "date": "2026-11-19",
+      "place": "",
+      "kind": "tbd",
+      "link": "",
+      "location": "",
+      "notes": "",
+      "gif": ""
+    },
+    {
+      "date": "2026-11-26",
+      "place": "Skip",
+      "kind": "skip",
+      "link": "",
+      "location": "",
+      "notes": "American Thanksgiving",
+      "gif": ""
+    },
+    {
+      "date": "2026-12-03",
+      "place": "",
+      "kind": "tbd",
+      "link": "",
+      "location": "",
+      "notes": "",
+      "gif": ""
+    },
+    {
+      "date": "2026-12-10",
+      "place": "",
+      "kind": "tbd",
+      "link": "",
+      "location": "",
+      "notes": "",
+      "gif": ""
+    },
+    {
+      "date": "2026-12-17",
+      "place": "Potential skip",
+      "kind": "maybe",
+      "link": "",
+      "location": "",
+      "notes": "There may be a TIP-C holiday party",
+      "gif": ""
+    },
+    {
+      "date": "2026-12-24",
+      "place": "Break",
+      "kind": "break",
+      "link": "",
+      "location": "",
+      "notes": "Winter Break. Future dates TBD.",
+      "gif": ""
     }
   ],
   "places": [

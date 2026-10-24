@@ -68,44 +68,125 @@
     return links.childElementCount ? links : null;
   }
 
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const DAY_MS = 24 * 60 * 60 * 1000;
+
+  const isPast = (s) => toDate(s.date) < today();
+  const isVenue = (s) => s.kind === "venue";
+  // Rows that are still a social on the calendar (skips and breaks are not).
+  const isOn = (s) => s.kind !== "skip" && s.kind !== "break";
+
+  function longDate(date) {
+    return date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+  }
+
+  function countdown(date) {
+    const days = Math.round((date - today()) / DAY_MS);
+    if (days <= 0) return "Tonight";
+    if (days === 1) return "Tomorrow";
+    if (days < 7) return `This ${date.toLocaleDateString("en-US", { weekday: "long" })}`;
+    return `In ${days} days`;
+  }
+
+  // A Giphy GIF as a small looping video; hovering enlarges it.
+  function gifThumb(id) {
+    if (!/^[A-Za-z0-9]+$/.test(id || "")) return null;
+    const a = el("a", {
+      class: "gif",
+      href: `https://giphy.com/gifs/${id}`,
+      target: "_blank",
+      rel: "noopener",
+      "aria-label": "GIF (opens on Giphy)",
+      title: "View on Giphy",
+    });
+    const video = document.createElement("video");
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.poster = `https://media.giphy.com/media/${id}/giphy_s.gif`;
+    video.src = `https://media.giphy.com/media/${id}/giphy.mp4`;
+    video.setAttribute("aria-hidden", "true");
+    if (reduceMotion) {
+      // Still frame until someone points at it.
+      video.preload = "none";
+      a.addEventListener("mouseenter", () => video.play());
+      a.addEventListener("mouseleave", () => video.pause());
+    } else {
+      video.autoplay = true;
+    }
+    a.append(video);
+    return a;
+  }
+
+  function placeText(s) {
+    const past = isPast(s);
+    if (s.kind === "skip") return past ? "Skipped" : "Skipping";
+    if (s.kind === "tbd") return past ? "" : "TBD";
+    return s.place;
+  }
+
   function renderRow(s, isNext, place) {
     const date = toDate(s.date);
     const classes = ["row"];
-    if (s.skipped || s.tbd) classes.push("is-muted");
+    if (!isVenue(s)) classes.push("is-muted");
     if (isNext) classes.push("is-next");
 
-    const muted = s.skipped || s.tbd;
     const website = s.link || (place && place.link);
     const map = s.location || (place && place.location);
+    const text = placeText(s);
 
     return el(
       "li",
       { class: classes.join(" ") },
       el(
-        "time",
-        { class: "row-date", datetime: s.date },
-        date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" })
+        "div",
+        { class: "row-when" },
+        el("time", { class: "row-date", datetime: s.date }, longDate(date)),
+        isNext && el("span", { class: "countdown" }, countdown(date))
       ),
       el(
         "div",
         { class: "row-body" },
-        el("p", { class: "row-place" }, muted ? (s.skipped ? "Skipped" : "TBD") : link(website, s.place, { class: "name" })),
-        s.notes && el("p", { class: "row-note" }, s.notes)
+        text && el("p", { class: "row-place" }, isVenue(s) ? link(website, text, { class: "name" }) : text),
+        s.notes && el("p", { class: "row-note" }, s.notes),
+        gifThumb(s.gif)
       ),
-      muted ? null : rowLinks(s.place, { map })
+      isVenue(s) ? rowLinks(s.place, { map }) : null
+    );
+  }
+
+  // Back-to-back break weeks become one band.
+  function renderBreak(run) {
+    const first = toDate(run[run.length - 1].date);
+    const last = toDate(run[0].date);
+    const note = (run.find((s) => s.notes) || {}).notes;
+    return el(
+      "li",
+      { class: "row is-break" },
+      el(
+        "div",
+        { class: "row-when" },
+        el(
+          "time",
+          { class: "row-date", datetime: run[run.length - 1].date },
+          run.length > 1 ? `${longDate(first)} – ${longDate(last)}` : longDate(first)
+        )
+      ),
+      el("div", { class: "row-body" }, el("p", { class: "row-place" }, "Break"), note && el("p", { class: "row-note" }, note))
     );
   }
 
   function renderSchedule(socials, places) {
     const now = today();
     const thisYear = now.getFullYear();
-    // The next social still on the calendar (a TBD date counts; skipped weeks don't).
-    const next = socials.find((s) => !s.skipped && toDate(s.date) >= now);
+    const next = socials.find((s) => isOn(s) && !isPast(s));
     // Fill a row's missing website/map links from the Suggestions tab.
     const placeByName = new Map(places.map((p) => [normalize(p.name), p]));
+    // Past rows with nothing in them are just unused placeholders.
+    const shown = socials.filter((s) => !(s.kind === "tbd" && isPast(s) && !s.notes));
 
     const byYear = new Map();
-    for (const s of socials) {
+    for (const s of shown) {
       const year = toDate(s.date).getFullYear();
       if (!byYear.has(year)) byYear.set(year, []);
       byYear.get(year).push(s);
@@ -114,28 +195,41 @@
 
     // Open this year plus any year with something coming up; if neither has
     // rows (e.g. early January), open the most recent year instead.
-    const open = new Set(years.filter((y) => y === thisYear || byYear.get(y).some((s) => toDate(s.date) >= now)));
+    const open = new Set(years.filter((y) => y === thisYear || byYear.get(y).some((s) => !isPast(s))));
     if (!open.size && years.length) open.add(years[0]);
 
     const container = document.getElementById("schedule");
     container.replaceChildren(
       ...years.map((year) => {
         const rows = byYear.get(year).slice().sort((a, b) => b.date.localeCompare(a.date));
-        const past = rows.filter((s) => toDate(s.date) < now && !s.tbd);
-        const skipped = past.filter((s) => s.skipped).length;
-        const upcoming = rows.filter((s) => toDate(s.date) >= now).length;
+        const past = rows.filter(isPast);
+        const socialsHeld = past.filter(isVenue).length;
+        const skipped = past.filter((s) => s.kind === "skip").length;
+        const upcoming = rows.filter((s) => !isPast(s) && isOn(s)).length;
         const count = [
-          plural(past.length - skipped, "social"),
+          plural(socialsHeld, "social"),
           skipped && `${skipped} skipped`,
           upcoming && `${upcoming} coming up`,
         ]
           .filter(Boolean)
           .join(", ");
+
+        const items = [];
+        for (let i = 0; i < rows.length; i++) {
+          if (rows[i].kind === "break") {
+            const run = [rows[i]];
+            while (rows[i + 1] && rows[i + 1].kind === "break") run.push(rows[++i]);
+            items.push(renderBreak(run));
+          } else {
+            items.push(renderRow(rows[i], rows[i] === next, placeByName.get(normalize(rows[i].place))));
+          }
+        }
+
         return el(
           "details",
           { class: "year", open: open.has(year) },
           el("summary", {}, el("span", { class: "year-label" }, year), el("span", { class: "year-count" }, count)),
-          el("ol", { class: "rows" }, ...rows.map((s) => renderRow(s, s === next, placeByName.get(normalize(s.place)))))
+          el("ol", { class: "rows" }, ...items)
         );
       })
     );
@@ -143,9 +237,9 @@
   }
 
   function renderStats(socials) {
-    const now = today();
-    const past = socials.filter((s) => toDate(s.date) < now && !s.tbd);
-    const rounds = past.filter((s) => !s.skipped);
+    const past = socials.filter(isPast);
+    const rounds = past.filter(isVenue);
+    const skipped = past.filter((s) => s.kind === "skip").length;
 
     // Visits per place; ties go to whichever was visited most recently.
     const visits = new Map();
@@ -160,7 +254,7 @@
     const stats = [
       stat(rounds.length, rounds.length === 1 ? "social" : "socials"),
       stat(visits.size, visits.size === 1 ? "spot" : "different spots"),
-      stat(past.length - rounds.length, "skipped"),
+      stat(skipped, "skipped"),
     ];
     if (top && top.count > 1) {
       stats.push(
@@ -171,10 +265,7 @@
   }
 
   function renderPlaces(places, socials) {
-    const now = today();
-    const beenTo = new Set(
-      socials.filter((s) => !s.skipped && !s.tbd && toDate(s.date) < now).map((s) => normalize(s.place))
-    );
+    const beenTo = new Set(socials.filter((s) => isVenue(s) && isPast(s)).map((s) => normalize(s.place)));
     const been = (p) => p.visited || beenTo.has(normalize(p.name));
     const byName = (a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" });
 

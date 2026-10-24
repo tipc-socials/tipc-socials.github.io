@@ -122,6 +122,15 @@ main.wrap { padding-top: 44px; }
   color: var(--cool-grey);
 }
 
+.section-sub + .fine-print { margin-top: -12px; }
+
+.fine-print {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--cool-grey);
+}
+
 .status { color: var(--cool-grey); }
 
 .status.error { color: var(--cardinal); }
@@ -206,9 +215,26 @@ main.wrap { padding-top: 44px; }
   border-top: 1px dashed var(--fog);
 }
 
+.row-when {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
 .row-date {
   color: var(--cool-grey);
   font-variant-numeric: tabular-nums;
+}
+
+.countdown {
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: var(--cardinal);
+  color: var(--white);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .row-body > p { margin: 0; }
@@ -243,11 +269,61 @@ main.wrap { padding-top: 44px; }
 
 .row.is-next .row-date { color: var(--black); font-weight: 600; }
 
+/* Breaks: a quiet striped band */
+
+.row.is-break {
+  margin: 6px -16px;
+  padding-left: 16px;
+  padding-right: 16px;
+  border-top-color: transparent;
+  border-radius: 14px;
+  background: repeating-linear-gradient(-45deg, var(--fog-light) 0 10px, var(--white) 10px 20px);
+  box-shadow: inset 0 0 0 1px var(--fog);
+}
+
+.row.is-break + .row { border-top-color: transparent; }
+
+.row.is-break .row-place {
+  font-family: var(--display);
+  font-weight: 700;
+}
+
+/* GIF thumbnail; grows on hover */
+
+.gif {
+  position: relative;
+  display: inline-block;
+  width: 132px;
+  margin-top: 10px;
+  line-height: 0;
+}
+
+.gif video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: var(--fog-light);
+  transform-origin: left center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gif:hover,
+.gif:focus-visible { z-index: 5; }
+
+.gif:hover video,
+.gif:focus-visible video {
+  transform: scale(2.4);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.45);
+}
+
 @media (max-width: 560px) {
   .row { grid-template-columns: minmax(0, 1fr) auto; }
-  .row-date { grid-column: 1; }
+  .row-when { grid-column: 1; flex-direction: row; align-items: center; gap: 10px; }
   .row-body { grid-column: 1; }
   .row-links { grid-column: 2; grid-row: 1 / span 2; }
+  .gif:hover video,
+  .gif:focus-visible video { transform: scale(2.2); }
 }
 
 /* Place names link to the website; map and menu are icons on the right */
@@ -327,5 +403,6 @@ a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
 
 @media (prefers-reduced-motion: reduce) {
   .year > summary::before,
-  .icon-link { transition: none; }
+  .icon-link,
+  .gif video { transition: none; }
 }

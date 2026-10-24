@@ -13,15 +13,21 @@ Edit the Google Sheet. The site picks up changes within about 30–60 minutes.
 **Weekly log tab** (`Date, Place, Link, Location, Notes`)
 
 - `Date`: write it like `Oct 29 2026`. `2026-10-29` and `10/29/2026` also work.
-- `Place`: the name of the spot. Write `Skipped` for weeks we didn't go out,
-  or `TBD` for a date whose spot isn't picked yet.
+- `Place`: the name of the spot, or one of these words:
+  - `Skip`: no social that week (past or future). Say why in `Notes`.
+  - `Break`: a planned pause, with its name in `Notes` (e.g. `Winter break`).
+    Back-to-back `Break` weeks show as one band.
+  - `TBD`, or leave it blank: the spot isn't picked yet.
+  - Anything with "skip" in it (e.g. `Potential skip`) is shown as written,
+    greyed out.
 - `Link`: the place's website (optional).
 - `Location`: a Google Maps link (optional).
-- `Notes`: anything worth remembering (optional).
+- `Notes`: anything worth remembering (optional). Paste a Giphy link here and
+  the GIF shows in the row instead of the link.
 
-The first row dated today or later (other than `Skipped`) is highlighted as
-the next social. If a row has no `Link` or `Location`, the site borrows them
-from the Places tab when the names match.
+The first row dated today or later that isn't a `Skip` or `Break` is
+highlighted as the next social, with a countdown. If a row has no `Link` or
+`Location`, the site borrows them from the Places tab when the names match.
 
 **Places tab** (`Places, Link, Location, Have we been?, Happy hour times, Happy hour notes, Happy hour menu`)
 
