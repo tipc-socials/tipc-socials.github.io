@@ -260,7 +260,6 @@
   function renderStats(socials) {
     const past = socials.filter(isPast);
     const rounds = past.filter(isVenue);
-    const skipped = past.filter((s) => s.kind === "skip").length;
 
     // Visits per place; ties go to whichever was visited most recently.
     const visits = new Map();
@@ -275,7 +274,6 @@
     const stats = [
       stat(rounds.length, rounds.length === 1 ? "social" : "socials"),
       stat(visits.size, visits.size === 1 ? "spot" : "different spots"),
-      stat(skipped, "skipped"),
     ];
     if (top && top.count > 1) {
       stats.push(
