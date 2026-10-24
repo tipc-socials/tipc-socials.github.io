@@ -1,8 +1,6 @@
 (function () {
   "use strict";
 
-  const DAY_MS = 24 * 60 * 60 * 1000;
-
   // "2026-10-29" -> local-midnight Date (avoids the UTC off-by-one).
   function toDate(iso) {
     const [y, m, d] = iso.split("-").map(Number);
@@ -48,29 +46,24 @@
     return `${n} ${word}${n === 1 ? "" : "s"}`;
   }
 
-  function nextFlag(date) {
-    const days = Math.round((date - today()) / DAY_MS);
-    if (days === 0) return "Next up: tonight";
-    if (days === 1) return "Next up: tomorrow";
-    if (days < 7) return `Next up: this ${date.toLocaleDateString("en-US", { weekday: "long" })}`;
-    return `Next up: in ${days} days`;
+  // A place name linked to its website, followed by small Map / Menu links.
+  function placeLine(cls, name, { website, map, menu } = {}) {
+    const extras = el("span", { class: "extra-links" });
+    if (safeUrl(map)) extras.append(link(map, "Map"));
+    if (safeUrl(menu)) extras.append(link(menu, "Happy hour menu"));
+    return el(
+      "p",
+      { class: cls },
+      link(website, name, { class: "name" }),
+      extras.childElementCount ? extras : null
+    );
   }
 
-  function renderRow(s, isNext) {
+  function renderRow(s, isNext, place) {
     const date = toDate(s.date);
-    const upcoming = date >= today();
     const classes = ["row"];
-    if (s.skipped) classes.push("is-skipped");
-    if (upcoming) classes.push("is-upcoming");
+    if (s.skipped || s.tbd) classes.push("is-muted");
     if (isNext) classes.push("is-next");
-
-    let actions = null;
-    if (isNext) {
-      actions = el("p", { class: "row-actions" });
-      if (safeUrl(s.location)) actions.append(link(s.location, "Directions"));
-      if (safeUrl(s.link)) actions.append(link(s.link, "Website"));
-      if (!actions.childElementCount) actions = null;
-    }
 
     return el(
       "li",
@@ -83,18 +76,24 @@
       el(
         "div",
         { class: "row-body" },
-        isNext && el("p", { class: "row-flag" }, nextFlag(date)),
-        el("p", { class: "row-place" }, s.skipped ? "Skipped" : isNext ? s.place : link(s.link || s.location, s.place)),
-        s.notes && el("p", { class: "row-note" }, s.notes),
-        actions
+        s.skipped || s.tbd
+          ? el("p", { class: "row-place" }, s.skipped ? "Skipped" : "TBD")
+          : placeLine("row-place", s.place, {
+              website: s.link || (place && place.link),
+              map: s.location || (place && place.location),
+            }),
+        s.notes && el("p", { class: "row-note" }, s.notes)
       )
     );
   }
 
-  function renderSchedule(socials) {
+  function renderSchedule(socials, places) {
     const now = today();
     const thisYear = now.getFullYear();
+    // The next social still on the calendar (a TBD date counts; skipped weeks don't).
     const next = socials.find((s) => !s.skipped && toDate(s.date) >= now);
+    // Fill a row's missing website/map links from the Suggestions tab.
+    const placeByName = new Map(places.map((p) => [normalize(p.name), p]));
 
     const byYear = new Map();
     for (const s of socials) {
@@ -113,9 +112,9 @@
     container.replaceChildren(
       ...years.map((year) => {
         const rows = byYear.get(year).slice().sort((a, b) => b.date.localeCompare(a.date));
-        const past = rows.filter((s) => toDate(s.date) < now);
+        const past = rows.filter((s) => toDate(s.date) < now && !s.tbd);
         const skipped = past.filter((s) => s.skipped).length;
-        const upcoming = rows.length - past.length;
+        const upcoming = rows.filter((s) => toDate(s.date) >= now).length;
         const count = [
           plural(past.length - skipped, "social"),
           skipped && `${skipped} skipped`,
@@ -127,7 +126,7 @@
           "details",
           { class: "year", open: open.has(year) },
           el("summary", {}, el("span", { class: "year-label" }, year), el("span", { class: "year-count" }, count)),
-          el("ol", { class: "rows" }, ...rows.map((s) => renderRow(s, s === next)))
+          el("ol", { class: "rows" }, ...rows.map((s) => renderRow(s, s === next, placeByName.get(normalize(s.place)))))
         );
       })
     );
@@ -136,7 +135,7 @@
 
   function renderStats(socials) {
     const now = today();
-    const past = socials.filter((s) => toDate(s.date) < now);
+    const past = socials.filter((s) => toDate(s.date) < now && !s.tbd);
     const rounds = past.filter((s) => !s.skipped);
 
     // Visits per place; ties go to whichever was visited most recently.
@@ -164,31 +163,34 @@
 
   function renderPlaces(places, socials) {
     const now = today();
-    const beenTo = new Set(socials.filter((s) => !s.skipped && toDate(s.date) < now).map((s) => normalize(s.place)));
-    const been = (p) => p.visited || beenTo.has(normalize(p.name));
-
-    // Untried spots first.
-    const sorted = places.slice().sort((a, b) => been(a) - been(b) || a.name.localeCompare(b.name));
-
-    const list = document.getElementById("places");
-    list.replaceChildren(
-      ...sorted.map((p) => {
-        const notesUrl = safeUrl(p.happy_hour_notes);
-        const links = el("div", { class: "place-links" });
-        if (safeUrl(p.location)) links.append(link(p.location, "Directions"));
-        if (notesUrl) links.append(link(notesUrl, "Happy hour menu"));
-
-        return el(
-          "li",
-          { class: "place" },
-          el("p", { class: "place-name" }, link(p.link, p.name), been(p) && el("span", { class: "place-been" }, "Been there")),
-          el("p", { class: "place-hours" }, p.happy_hour ? `Happy hour ${p.happy_hour}` : "Happy hour unknown"),
-          !notesUrl && p.happy_hour_notes && el("p", { class: "place-notes" }, p.happy_hour_notes),
-          links.childElementCount ? links : null
-        );
-      })
+    const beenTo = new Set(
+      socials.filter((s) => !s.skipped && !s.tbd && toDate(s.date) < now).map((s) => normalize(s.place))
     );
-    if (!sorted.length) list.append(el("li", { class: "place" }, "No places on the list yet."));
+    const been = (p) => p.visited || beenTo.has(normalize(p.name));
+    const byName = (a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" });
+
+    const item = (p) =>
+      el(
+        "li",
+        { class: "place" },
+        placeLine("place-name", p.name, { website: p.link, map: p.location, menu: p.happy_hour_menu }),
+        el("p", { class: "place-hours" }, p.happy_hour ? `Happy hour ${p.happy_hour}` : "Happy hour unknown"),
+        p.happy_hour_notes && el("p", { class: "place-notes" }, p.happy_hour_notes)
+      );
+
+    const groups = [
+      ["Haven't been yet", places.filter((p) => !been(p)).sort(byName)],
+      ["Been there", places.filter(been).sort(byName)],
+    ].filter(([, rows]) => rows.length);
+
+    const container = document.getElementById("places");
+    container.replaceChildren(
+      ...groups.flatMap(([title, rows]) => [
+        el("h3", { class: "place-group" }, title),
+        el("ul", { class: "place-list" }, ...rows.map(item)),
+      ])
+    );
+    if (!groups.length) container.append(el("p", { class: "status" }, "No suggestions yet."));
   }
 
   fetch("data/socials.json", { cache: "no-cache" })
@@ -197,7 +199,7 @@
       return res.json();
     })
     .then((data) => {
-      renderSchedule(data.socials);
+      renderSchedule(data.socials, data.places || []);
       renderStats(data.socials);
       renderPlaces(data.places || [], data.socials);
     })

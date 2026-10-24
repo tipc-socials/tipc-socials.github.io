@@ -3,7 +3,8 @@
 
 The sheet has two tabs:
   - the weekly log:  Date, Place, Link, Location, Notes
-  - the places list: Places, Link, Location, Have we been?, Happy hour times, Happy hour notes
+  - the places list: Places, Link, Location, Have we been?, Happy hour times,
+    Happy hour notes, Happy hour menu
 
 Exits non-zero (and writes nothing) if either tab can't be fetched or doesn't
 look right, so a bad edit never blanks the website.
@@ -125,6 +126,7 @@ def parse_socials(text):
                 "location": clean_url(get("location")),
                 "notes": get("notes"),
                 "skipped": place.lower() == "skipped",
+                "tbd": place.lower() in ("tbd", "tba", "?"),
             }
         )
 
@@ -144,10 +146,16 @@ def parse_places(text):
         "have we been?",
         "happy hour times",
         "happy hour notes",
+        "happy hour menu",
     ]
     for _, get in read_table(text, "places", ["places"], optional):
         if not get("places"):
             continue
+        notes = get("happy hour notes")
+        menu = clean_url(get("happy hour menu"))
+        # Older rows put the menu link in the notes column.
+        if not menu and notes.lower().startswith(("http://", "https://")):
+            menu, notes = clean_url(notes), ""
         rows.append(
             {
                 "name": get("places"),
@@ -155,7 +163,8 @@ def parse_places(text):
                 "location": clean_url(get("location")),
                 "visited": get("have we been?").lower().startswith("y"),
                 "happy_hour": get("happy hour times"),
-                "happy_hour_notes": get("happy hour notes"),
+                "happy_hour_notes": notes,
+                "happy_hour_menu": menu,
             }
         )
     rows.sort(key=lambda r: r["name"].lower())

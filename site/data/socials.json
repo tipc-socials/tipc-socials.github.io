@@ -6,7 +6,8 @@
       "link": "https://www.gotts.com",
       "location": "https://maps.app.goo.gl/oHbu5myVY7zYsnp77",
       "notes": "Maybe not the best for drinks, really just a burger place",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
     },
     {
       "date": "2026-01-21",
@@ -14,7 +15,8 @@
       "link": "https://www.therosepa.com/",
       "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
       "notes": "Great for drinks and darts!",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
     },
     {
       "date": "2026-01-28",
@@ -22,7 +24,8 @@
       "link": "https://www.therosepa.com/",
       "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
       "notes": "We went back again for Anya's birthday!",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
     },
     {
       "date": "2026-02-04",
@@ -30,7 +33,8 @@
       "link": "",
       "location": "",
       "notes": "Erywunbizze",
-      "skipped": true
+      "skipped": true,
+      "tbd": false
     },
     {
       "date": "2026-02-11",
@@ -38,7 +42,8 @@
       "link": "https://www.nolas.com/",
       "location": "",
       "notes": "Good for larger crowds and decent happy hour drinks",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
     },
     {
       "date": "2026-02-18",
@@ -46,7 +51,8 @@
       "link": "",
       "location": "",
       "notes": "Skipped for Chinese New Year Celebration",
-      "skipped": true
+      "skipped": true,
+      "tbd": false
     },
     {
       "date": "2026-02-25",
@@ -54,7 +60,8 @@
       "link": "https://www.therosepa.com/",
       "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
       "notes": "It's becoming a thing",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
     },
     {
       "date": "2026-03-04",
@@ -62,7 +69,8 @@
       "link": "https://barunderdogpa.com/",
       "location": "https://maps.app.goo.gl/T5AmitHkmNnLrFJHA",
       "notes": "Cool trendy spot, but a little small",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
     },
     {
       "date": "2026-10-29",
@@ -70,7 +78,17 @@
       "link": "https://www.treehouseatstanford.com/",
       "location": "https://maps.app.goo.gl/k8DRVZh29qrxxwaV7",
       "notes": "Stanford campus staple and fall back to beat travel time across town",
-      "skipped": false
+      "skipped": false,
+      "tbd": false
+    },
+    {
+      "date": "2026-11-05",
+      "place": "TBD",
+      "link": "",
+      "location": "",
+      "notes": "",
+      "skipped": false,
+      "tbd": true
     }
   ],
   "places": [
@@ -80,7 +98,8 @@
       "location": "https://maps.app.goo.gl/H1s5HYzt9L7pCuy9A",
       "visited": true,
       "happy_hour": "weekdays 4pm-5:30pm",
-      "happy_hour_notes": "$10 cocktails from a select menu"
+      "happy_hour_notes": "$10 cocktails from a select menu",
+      "happy_hour_menu": ""
     },
     {
       "name": "Coconuts",
@@ -88,7 +107,8 @@
       "location": "https://maps.app.goo.gl/zkMEbpVdDbaah53s9",
       "visited": false,
       "happy_hour": "Mon-Fri 4-6pm",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "Gott's",
@@ -96,7 +116,8 @@
       "location": "https://maps.app.goo.gl/oHbu5myVY7zYsnp77",
       "visited": true,
       "happy_hour": "",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "Hidden Tap and Barrel",
@@ -104,7 +125,8 @@
       "location": "https://maps.app.goo.gl/axQjupQjbkX2oyGa9",
       "visited": false,
       "happy_hour": "",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "Nola",
@@ -112,7 +134,8 @@
       "location": "https://maps.app.goo.gl/XqcpwtvW6TkVJZo78",
       "visited": true,
       "happy_hour": "weekdays 3-6pm",
-      "happy_hour_notes": "Happy hour details are from memory, as they do not list it on their website at the moment."
+      "happy_hour_notes": "Happy hour times are from memory, as they are not online at the moment",
+      "happy_hour_menu": "https://barunderdogpa.com/content/bar-underdog-menu-october-26.pdf"
     },
     {
       "name": "Pacific Catch",
@@ -120,7 +143,8 @@
       "location": "https://maps.app.goo.gl/orrdfBYwHNYqHy129",
       "visited": false,
       "happy_hour": "Mon - Fri 3-6pm",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "Pizzeria Delfina",
@@ -128,7 +152,8 @@
       "location": "https://maps.app.goo.gl/SKNRtSmvoXk8eUy47",
       "visited": false,
       "happy_hour": "",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "Rossotti’s Alpine Inn",
@@ -136,7 +161,8 @@
       "location": "https://maps.app.goo.gl/ZgLrvQrYYka25Lr19",
       "visited": false,
       "happy_hour": "Tue-Fri 2:30-5:30pm (in the tavern)",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "The Pro",
@@ -144,7 +170,8 @@
       "location": "https://www.google.com/maps/place/The+Pro/@37.4447673,-122.1613641,17z/data=!4m15!1m8!3m7!1s0x808fbb94007a54ff:0xe01e9ef93700c73f!2sThe+Pro!8m2!3d37.4449685!4d-122.1611671!10e5!16s%2Fg%2F11n5334_8b!3m5!1s0x808fbb94007a54ff:0xe01e9ef93700c73f!8m2!3d37.4449685!4d-122.1611671!16s%2Fg%2F11n5334_8b?entry=ttu&g_ep=EgoyMDI2MDMwNS4wIKXMDSoASAFQAw%3D%3D",
       "visited": false,
       "happy_hour": "weekdays 3-5pm",
-      "happy_hour_notes": "https://thepropaloalto.com/wp-content/uploads/Amateur-Hour.pdf"
+      "happy_hour_notes": "See menu",
+      "happy_hour_menu": "https://thepropaloalto.com/wp-content/uploads/Amateur-Hour.pdf"
     },
     {
       "name": "Vino Locale",
@@ -152,7 +179,8 @@
       "location": "https://maps.app.goo.gl/kWbrmB4sP2hMGthQ9",
       "visited": true,
       "happy_hour": "Daily 3-5:30pm",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     },
     {
       "name": "Wildseed",
@@ -160,7 +188,8 @@
       "location": "https://maps.app.goo.gl/1VGbDC1uzwpyV5jF7",
       "visited": true,
       "happy_hour": "Mon-Fri 4-6pm",
-      "happy_hour_notes": ""
+      "happy_hour_notes": "",
+      "happy_hour_menu": ""
     }
   ]
 }
