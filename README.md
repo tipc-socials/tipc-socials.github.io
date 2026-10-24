@@ -1,6 +1,6 @@
-# TIPC socials
+# TIP-C socials
 
-The website for the weekly TIPC social: **https://tipc-socials.github.io**
+The website for the weekly TIP-C social: **https://tipc-socials.github.io**
 
 It shows the schedule (with the next social highlighted), every week we've
 been out, and a list of suggested places. All of it comes from a

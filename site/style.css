@@ -406,3 +406,5 @@ a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
   .icon-link,
   .gif video { transition: none; }
 }
+
+.nowrap { white-space: nowrap; }
