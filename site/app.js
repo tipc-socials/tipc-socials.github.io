@@ -155,6 +155,7 @@
     const website = s.link || (place && place.link);
     const map = s.location || (place && place.location);
     const text = placeText(s);
+    const gif = gifThumb(s.gif);
 
     return el(
       "li",
@@ -169,8 +170,9 @@
         "div",
         { class: "row-body" },
         text && el("p", { class: "row-place" }, isVenue(s) ? link(website, text, { class: "name" }) : text),
-        s.notes && el("p", { class: "row-note" }, s.notes),
-        gifThumb(s.gif)
+        gif
+          ? el("div", { class: "row-detail" }, s.notes && el("p", { class: "row-note" }, s.notes), gif)
+          : s.notes && el("p", { class: "row-note" }, s.notes)
       ),
       isVenue(s) ? rowLinks(s.place, { map }) : null
     );

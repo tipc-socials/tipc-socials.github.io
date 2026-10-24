@@ -308,6 +308,28 @@ main.wrap { padding-top: 44px; }
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Note and GIF side by side; the GIF sits at the right and grows leftward */
+
+.row-detail {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 2px;
+}
+
+.row-detail .row-note {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.row-detail .gif {
+  flex: none;
+  margin-top: 2px;
+}
+
+.row-detail .row-note + .gif video { transform-origin: right center; }
+
 .gif:hover,
 .gif:focus-visible { z-index: 5; }
 
@@ -322,8 +344,9 @@ main.wrap { padding-top: 44px; }
   .row-when { grid-column: 1; flex-direction: row; align-items: center; gap: 10px; }
   .row-body { grid-column: 1; }
   .row-links { grid-column: 2; grid-row: 1 / span 2; }
+  .gif { width: 112px; }
   .gif:hover video,
-  .gif:focus-visible video { transform: scale(2.2); }
+  .gif:focus-visible video { transform: scale(2.4); }
 }
 
 /* Place names link to the website; map and menu are icons on the right */
