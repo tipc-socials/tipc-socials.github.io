@@ -199,7 +199,8 @@ main.wrap { padding-top: 44px; }
 
 .row {
   display: grid;
-  grid-template-columns: 9.5rem minmax(0, 1fr);
+  grid-template-columns: 9.5rem minmax(0, 1fr) auto;
+  align-items: start;
   gap: 4px 20px;
   padding: 14px 0;
   border-top: 1px dashed var(--fog);
@@ -243,22 +244,41 @@ main.wrap { padding-top: 44px; }
 .row.is-next .row-date { color: var(--black); font-weight: 600; }
 
 @media (max-width: 560px) {
-  .row { grid-template-columns: minmax(0, 1fr); }
+  .row { grid-template-columns: minmax(0, 1fr) auto; }
+  .row-date { grid-column: 1; }
+  .row-body { grid-column: 1; }
+  .row-links { grid-column: 2; grid-row: 1 / span 2; }
 }
 
-/* Place name linked to its website, then small Map / Menu links */
+/* Place names link to the website; map and menu are icons on the right */
 
 .name { color: inherit; text-decoration-color: var(--fog); }
 
 a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
 
-.extra-links {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0 12px;
-  margin-left: 12px;
-  font-size: 0.875rem;
-  font-weight: 600;
+.row-links {
+  display: flex;
+  gap: 8px;
+  align-self: center;
+}
+
+.icon-link {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: var(--fog-light);
+  color: var(--cardinal);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.row.is-next .icon-link { background: var(--white); }
+
+.icon-link:hover,
+.row.is-next .icon-link:hover {
+  background: var(--cardinal);
+  color: var(--white);
 }
 
 /* ---------- Suggestions ---------- */
@@ -279,11 +299,14 @@ a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
 }
 
 .place {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0 16px;
   padding: 12px 0;
   border-bottom: 1px dashed var(--fog);
 }
 
-.place > p { margin: 0; }
+.place-body > p { margin: 0; }
 
 .place-name { font-weight: 600; }
 
@@ -303,5 +326,6 @@ a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
 .footer p { margin: 0; }
 
 @media (prefers-reduced-motion: reduce) {
-  .year > summary::before { transition: none; }
+  .year > summary::before,
+  .icon-link { transition: none; }
 }

@@ -46,17 +46,26 @@
     return `${n} ${word}${n === 1 ? "" : "s"}`;
   }
 
-  // A place name linked to its website, followed by small Map / Menu links.
-  function placeLine(cls, name, { website, map, menu } = {}) {
-    const extras = el("span", { class: "extra-links" });
-    if (safeUrl(map)) extras.append(link(map, "Map"));
-    if (safeUrl(menu)) extras.append(link(menu, "Happy hour menu"));
-    return el(
-      "p",
-      { class: cls },
-      link(website, name, { class: "name" }),
-      extras.childElementCount ? extras : null
-    );
+  // 24x24 stroke icons (shapes after Lucide's map-pin and martini).
+  const ICONS = {
+    map: '<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+    menu: '<path d="M8 22h8"/><path d="M12 11v11"/><path d="m19 3-7 8-7-8Z"/>',
+  };
+
+  function iconLink(url, label, icon) {
+    const a = link(url, "", { class: "icon-link", "aria-label": label, title: label });
+    a.innerHTML =
+      '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" ' +
+      `stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[icon]}</svg>`;
+    return a;
+  }
+
+  // Map / menu icons that sit at the right end of a row.
+  function rowLinks(name, { map, menu } = {}) {
+    const links = el("div", { class: "row-links" });
+    if (safeUrl(map)) links.append(iconLink(map, `Map: ${name}`, "map"));
+    if (safeUrl(menu)) links.append(iconLink(menu, `Happy hour menu: ${name}`, "menu"));
+    return links.childElementCount ? links : null;
   }
 
   function renderRow(s, isNext, place) {
@@ -64,6 +73,10 @@
     const classes = ["row"];
     if (s.skipped || s.tbd) classes.push("is-muted");
     if (isNext) classes.push("is-next");
+
+    const muted = s.skipped || s.tbd;
+    const website = s.link || (place && place.link);
+    const map = s.location || (place && place.location);
 
     return el(
       "li",
@@ -76,14 +89,10 @@
       el(
         "div",
         { class: "row-body" },
-        s.skipped || s.tbd
-          ? el("p", { class: "row-place" }, s.skipped ? "Skipped" : "TBD")
-          : placeLine("row-place", s.place, {
-              website: s.link || (place && place.link),
-              map: s.location || (place && place.location),
-            }),
+        el("p", { class: "row-place" }, muted ? (s.skipped ? "Skipped" : "TBD") : link(website, s.place, { class: "name" })),
         s.notes && el("p", { class: "row-note" }, s.notes)
-      )
+      ),
+      muted ? null : rowLinks(s.place, { map })
     );
   }
 
@@ -173,9 +182,14 @@
       el(
         "li",
         { class: "place" },
-        placeLine("place-name", p.name, { website: p.link, map: p.location, menu: p.happy_hour_menu }),
-        el("p", { class: "place-hours" }, p.happy_hour ? `Happy hour ${p.happy_hour}` : "Happy hour unknown"),
-        p.happy_hour_notes && el("p", { class: "place-notes" }, p.happy_hour_notes)
+        el(
+          "div",
+          { class: "place-body" },
+          el("p", { class: "place-name" }, link(p.link, p.name, { class: "name" })),
+          el("p", { class: "place-hours" }, p.happy_hour ? `Happy hour ${p.happy_hour}` : "Happy hour unknown"),
+          p.happy_hour_notes && el("p", { class: "place-notes" }, p.happy_hour_notes)
+        ),
+        rowLinks(p.name, { map: p.location, menu: p.happy_hour_menu })
       );
 
     const groups = [
