@@ -88,6 +88,15 @@ button:focus-visible {
 
 .tagline a { color: var(--white); }
 
+.invite {
+  margin: 4px 0 0;
+  max-width: 27rem;
+  font-size: 0.9375rem;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.8);
+  text-wrap: balance;
+}
+
 .header-stats {
   display: grid;
   grid-template-columns: auto 1fr;
