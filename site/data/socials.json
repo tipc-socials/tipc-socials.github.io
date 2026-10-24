@@ -171,7 +171,7 @@
       "visited": true,
       "happy_hour": "weekdays 4pm-5:30pm",
       "happy_hour_notes": "$10 cocktails from a select menu",
-      "happy_hour_menu": ""
+      "happy_hour_menu": "https://barunderdogpa.com/content/bar-underdog-menu-october-26.pdf"
     },
     {
       "name": "Coconuts",
@@ -207,7 +207,7 @@
       "visited": true,
       "happy_hour": "weekdays 3-6pm",
       "happy_hour_notes": "Happy hour times are from memory, as they are not online at the moment",
-      "happy_hour_menu": "https://barunderdogpa.com/content/bar-underdog-menu-october-26.pdf"
+      "happy_hour_menu": ""
     },
     {
       "name": "Pacific Catch",
