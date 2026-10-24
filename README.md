@@ -10,7 +10,7 @@ been out, and a list of suggested places. All of it comes from a
 
 Edit the Google Sheet. The site picks up changes within about 30–60 minutes.
 
-**Weekly log tab** (`Date, Place, Link, Location, Notes`)
+**Weekly log tab** (`Date, Place, Link, Location, Notes`, optional `GIF`)
 
 - `Date`: write it like `Oct 29 2026`. `2026-10-29` and `10/29/2026` also work.
 - `Place`: the name of the spot, or one of these words:
@@ -22,8 +22,9 @@ Edit the Google Sheet. The site picks up changes within about 30–60 minutes.
     greyed out.
 - `Link`: the place's website (optional).
 - `Location`: a Google Maps link (optional).
-- `Notes`: anything worth remembering (optional). Paste a Giphy link here and
-  the GIF shows in the row instead of the link.
+- `Notes`: anything worth remembering (optional).
+- `GIF` (optional column): a Giphy link; the GIF shows in the row. A Giphy
+  link pasted into `Notes` works too.
 
 The first row dated today or later that isn't a `Skip` or `Break` is
 highlighted as the next social, with a countdown. If a row has no `Link` or

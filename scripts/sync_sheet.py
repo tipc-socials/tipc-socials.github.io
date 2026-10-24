@@ -2,7 +2,7 @@
 """Download the socials Google Sheet and write it to site/data/socials.json.
 
 The sheet has two tabs:
-  - the weekly log:  Date, Place, Link, Location, Notes
+  - the weekly log:  Date, Place, Link, Location, Notes (+ optional GIF)
   - the places list: Places, Link, Location, Have we been?, Happy hour times,
     Happy hour notes, Happy hour menu
 
@@ -137,7 +137,7 @@ def row_kind(place):
 def parse_socials(text):
     rows, errors = [], []
     for row_num, get in read_table(
-        text, "weekly log", ["date", "place"], ["link", "location", "notes"]
+        text, "weekly log", ["date", "place"], ["link", "location", "notes", "gif", "giphy link"]
     ):
         date = parse_date(get("date"))
         if date is None:
@@ -147,7 +147,10 @@ def parse_socials(text):
             )
             continue
         place = get("place")
-        notes, gif = split_gif(get("notes"))
+        # A GIF column wins; otherwise look for a Giphy link in the notes.
+        _, gif = split_gif(get("gif") or get("giphy link"))
+        notes, note_gif = split_gif(get("notes"))
+        gif = gif or note_gif
         rows.append(
             {
                 "date": date.isoformat(),
