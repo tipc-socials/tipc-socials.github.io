@@ -426,9 +426,11 @@ a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
   color: var(--black);
 }
 
-.contact a { font-weight: 600; }
+.contact .contact-name { font-weight: 600; }
 
-.contact-email { color: var(--cool-grey); }
+.footer-meta a { color: inherit; }
+
+.footer-meta a:hover { color: var(--cardinal); }
 
 .footer-meta { font-size: 0.8125rem; }
 
