@@ -237,7 +237,8 @@ main.wrap { padding-top: 44px; }
   white-space: nowrap;
 }
 
-.row-body > p { margin: 0; }
+.row-body > p,
+.row-text > p { margin: 0; }
 
 .row-place {
   font-weight: 600;
@@ -288,54 +289,40 @@ main.wrap { padding-top: 44px; }
   font-weight: 700;
 }
 
-/* GIF thumbnail; grows on hover */
+/* GIF: sits right beside the name and note, top-aligned, and grows into
+   the open space to its right on hover */
+
+.row-body.has-gif {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) auto;
+  justify-content: start;
+  align-items: start;
+  column-gap: 20px;
+}
 
 .gif {
   position: relative;
-  display: inline-block;
-  width: 132px;
-  margin-top: 10px;
+  display: block;
   line-height: 0;
 }
 
 .gif video {
   display: block;
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 88px;
+  max-width: 160px;
   border-radius: 10px;
   background: var(--fog-light);
   transform-origin: left center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Note and GIF side by side; the GIF sits at the right and grows leftward */
-
-.row-detail {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  margin-top: 2px;
-}
-
-.row-detail .row-note {
-  flex: 1;
-  min-width: 0;
-  margin-top: 0;
-}
-
-.row-detail .gif {
-  flex: none;
-  margin-top: 2px;
-}
-
-.row-detail .row-note + .gif video { transform-origin: right center; }
-
 .gif:hover,
 .gif:focus-visible { z-index: 5; }
 
 .gif:hover video,
 .gif:focus-visible video {
-  transform: scale(2.4);
+  transform: scale(2.6);
   box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.45);
 }
 
@@ -344,9 +331,7 @@ main.wrap { padding-top: 44px; }
   .row-when { grid-column: 1; flex-direction: row; align-items: center; gap: 10px; }
   .row-body { grid-column: 1; }
   .row-links { grid-column: 2; grid-row: 1 / span 2; }
-  .gif { width: 112px; }
-  .gif:hover video,
-  .gif:focus-visible video { transform: scale(2.4); }
+  .row-body.has-gif { column-gap: 14px; }
 }
 
 /* Place names link to the website; map and menu are icons on the right */

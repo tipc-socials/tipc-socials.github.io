@@ -168,11 +168,14 @@
       ),
       el(
         "div",
-        { class: "row-body" },
-        text && el("p", { class: "row-place" }, isVenue(s) ? link(website, text, { class: "name" }) : text),
+        { class: gif ? "row-body has-gif" : "row-body" },
+        el(
+          "div",
+          { class: "row-text" },
+          text && el("p", { class: "row-place" }, isVenue(s) ? link(website, text, { class: "name" }) : text),
+          s.notes && el("p", { class: "row-note" }, s.notes)
+        ),
         gif
-          ? el("div", { class: "row-detail" }, s.notes && el("p", { class: "row-note" }, s.notes), gif)
-          : s.notes && el("p", { class: "row-note" }, s.notes)
       ),
       isVenue(s) ? rowLinks(s.place, { map }) : null
     );
