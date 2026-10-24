@@ -87,6 +87,13 @@ button:focus-visible {
 
 .tagline a { color: var(--white); }
 
+.welcome {
+  margin: 12px 0 0;
+  max-width: 26rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
 .header-stats {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -408,6 +415,8 @@ a.name:hover { color: var(--cardinal); text-decoration-color: currentColor; }
 }
 
 .footer p { margin: 0; }
+
+.footer p + p { margin-top: 6px; }
 
 @media (prefers-reduced-motion: reduce) {
   .year > summary::before,
