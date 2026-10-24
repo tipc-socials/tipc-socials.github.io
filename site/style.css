@@ -42,7 +42,7 @@ button:focus-visible {
 }
 
 .wrap {
-  max-width: 48rem;
+  max-width: 54rem;
   margin: 0 auto;
   padding: 0 16px;
 }
@@ -57,7 +57,7 @@ button:focus-visible {
 
 .masthead-inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 20rem);
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 24px;
   padding-top: clamp(28px, 6vw, 48px);
@@ -66,7 +66,7 @@ button:focus-visible {
 
 @media (max-width: 640px) {
   .masthead-inner { grid-template-columns: minmax(0, 1fr); gap: 8px; }
-  .scene { max-width: 300px; }
+  .scene { max-width: 360px; }
 }
 
 .title {
@@ -103,66 +103,6 @@ button:focus-visible {
 }
 
 .scene svg { display: block; width: 100%; height: auto; overflow: visible; }
-
-/* Resting state = the end of the throw (dart stuck in the board). */
-.scene .arm { transform-origin: 96px 106px; transform: rotate(-10deg); }
-.scene .held-dart { opacity: 0; }
-.scene .flight { transform: translate(296px, 70px); }
-.scene .flight-arc { transform: translateY(0) rotate(8deg); }
-
-.scene.is-playing .arm { animation: arm 2.6s both; }
-.scene.is-playing .held-dart { animation: held 2.6s both; }
-.scene.is-playing .flight { animation: flight 2.6s both; }
-.scene.is-playing .flight-arc { animation: arc 2.6s both; }
-.scene.is-playing .board { animation: thunk 2.6s both; }
-.scene.is-playing .raccoon { animation: hop 2.6s both; }
-
-@keyframes arm {
-  0%, 10% { transform: rotate(-10deg); }
-  24% { transform: rotate(-115deg); animation-timing-function: ease-in; }
-  28% { transform: rotate(-15deg); }
-  33%, 46% { transform: rotate(25deg); }
-  58%, 100% { transform: rotate(-10deg); }
-}
-
-@keyframes held {
-  0%, 27.9% { opacity: 1; }
-  28%, 100% { opacity: 0; }
-}
-
-@keyframes flight {
-  0%, 27.9% { transform: translate(140px, 94px); opacity: 0; }
-  28% { transform: translate(140px, 94px); opacity: 1; animation-timing-function: linear; }
-  50%, 100% { transform: translate(296px, 70px); opacity: 1; }
-}
-
-@keyframes arc {
-  0%, 28% { transform: translateY(0) rotate(-15deg); animation-timing-function: ease-out; }
-  39% { transform: translateY(-28px) rotate(-4deg); animation-timing-function: ease-in; }
-  50% { transform: translateY(0) rotate(8deg); }
-  53% { transform: translateY(0) rotate(1deg); }
-  56% { transform: translateY(0) rotate(13deg); }
-  59% { transform: translateY(0) rotate(5deg); }
-  62%, 100% { transform: translateY(0) rotate(8deg); }
-}
-
-@keyframes thunk {
-  0%, 50% { transform: translateX(0); }
-  52% { transform: translateX(3px); }
-  56%, 100% { transform: translateX(0); }
-}
-
-@keyframes hop {
-  0%, 62% { transform: translateY(0); animation-timing-function: ease-out; }
-  68% { transform: translateY(-12px); animation-timing-function: ease-in; }
-  74% { transform: translateY(0); animation-timing-function: ease-out; }
-  79% { transform: translateY(-6px); animation-timing-function: ease-in; }
-  84%, 100% { transform: translateY(0); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scene.is-playing * { animation: none !important; }
-}
 
 /* ---------- Sections ---------- */
 

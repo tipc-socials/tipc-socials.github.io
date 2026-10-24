@@ -191,14 +191,6 @@
     if (!sorted.length) list.append(el("li", { class: "place" }, "No places on the list yet."));
   }
 
-  // Click the raccoon to throw again (restart the CSS animation).
-  const scene = document.querySelector(".scene");
-  scene.addEventListener("click", () => {
-    scene.classList.remove("is-playing");
-    void scene.offsetWidth;
-    scene.classList.add("is-playing");
-  });
-
   fetch("data/socials.json", { cache: "no-cache" })
     .then((res) => {
       if (!res.ok) throw new Error(res.status);

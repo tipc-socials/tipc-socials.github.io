@@ -22,70 +22,9 @@
         </p>
       </div>
 
-      <!-- Raccoon throws a dart. Plays on load; click to throw again. -->
-      <button class="scene is-playing" type="button" aria-label="Throw another dart" title="Throw another dart">
-        <svg viewBox="0 0 360 170" aria-hidden="true" focusable="false">
-          <defs>
-            <!-- Dart with its tip at 0,0, pointing right -->
-            <g id="dart" transform="scale(1.3)">
-              <path d="M0 0 L-8 -2.2 L-8 2.2 Z" fill="#c0c0bf"/>
-              <rect x="-20" y="-2.6" width="13" height="5.2" rx="2" fill="#fedd5c"/>
-              <rect x="-30" y="-1.1" width="11" height="2.2" fill="#2e2d29"/>
-              <path d="M-27 0 L-37 -8 L-32 0 L-37 8 Z" fill="#e98300"/>
-            </g>
-          </defs>
-
-          <g class="board">
-            <circle cx="300" cy="72" r="47" fill="#2e2d29"/>
-            <circle cx="300" cy="72" r="40" fill="#175e54"/>
-            <circle cx="300" cy="72" r="34" fill="#f4eedc"/>
-            <circle cx="300" cy="72" r="27" fill="#b1040e"/>
-            <circle cx="300" cy="72" r="21" fill="#f4eedc"/>
-            <circle cx="300" cy="72" r="13" fill="#175e54"/>
-            <circle cx="300" cy="72" r="5" fill="#b1040e"/>
-            <g stroke="#2e2d29" stroke-opacity="0.3" stroke-width="1">
-              <line x1="260" y1="72" x2="340" y2="72"/>
-              <line x1="300" y1="32" x2="300" y2="112"/>
-              <line x1="272" y1="44" x2="328" y2="100"/>
-              <line x1="328" y1="44" x2="272" y2="100"/>
-            </g>
-          </g>
-
-          <g class="raccoon">
-            <!-- tail -->
-            <path d="M62 134 C 40 130, 24 114, 28 92" fill="none" stroke="#8d8a84" stroke-width="16" stroke-linecap="round"/>
-            <path d="M62 134 C 40 130, 24 114, 28 92" fill="none" stroke="#2e2d29" stroke-width="16" stroke-dasharray="7 7"/>
-            <circle cx="28" cy="92" r="8" fill="#2e2d29"/>
-            <!-- body -->
-            <ellipse cx="82" cy="120" rx="28" ry="30" fill="#8d8a84"/>
-            <ellipse cx="90" cy="126" rx="15" ry="20" fill="#d9d4c7"/>
-            <ellipse cx="72" cy="150" rx="10" ry="5" fill="#2e2d29"/>
-            <ellipse cx="97" cy="150" rx="10" ry="5" fill="#2e2d29"/>
-            <!-- throwing arm (drawn behind the head) -->
-            <g class="arm">
-              <path d="M96 106 L124 106" stroke="#77746d" stroke-width="10" stroke-linecap="round"/>
-              <g class="held-dart"><use href="#dart" transform="translate(142 106)"/></g>
-              <circle cx="125" cy="106" r="6" fill="#2e2d29"/>
-            </g>
-            <!-- head -->
-            <path d="M80 58 L83 37 L97 50 Z" fill="#8d8a84"/>
-            <path d="M83 52 L85 43 L91 49 Z" fill="#2e2d29"/>
-            <path d="M101 49 L111 33 L118 54 Z" fill="#8d8a84"/>
-            <path d="M105 48 L110 40 L114 51 Z" fill="#2e2d29"/>
-            <circle cx="98" cy="70" r="22" fill="#8d8a84"/>
-            <ellipse cx="105" cy="75" rx="17" ry="13" fill="#e8e4d8"/>
-            <path d="M83 70 C 89 61, 99 63, 104 69 C 108 63, 118 61, 123 68 C 119 78, 109 78, 104 74 C 99 79, 88 78, 83 70 Z" fill="#2e2d29"/>
-            <circle cx="95" cy="70" r="3.4" fill="#fff"/>
-            <circle cx="113" cy="69" r="3.4" fill="#fff"/>
-            <circle cx="96.2" cy="70" r="1.8" fill="#2e2d29"/>
-            <circle cx="114.2" cy="69" r="1.8" fill="#2e2d29"/>
-            <ellipse cx="119" cy="81" rx="9" ry="6" fill="#e8e4d8"/>
-            <circle cx="127" cy="79.5" r="3.4" fill="#2e2d29"/>
-            <path d="M118 85 Q 121 88 124 85" fill="none" stroke="#2e2d29" stroke-width="1.4" stroke-linecap="round"/>
-          </g>
-
-          <g class="flight"><g class="flight-arc"><use href="#dart"/></g></g>
-        </svg>
+      <!-- Raccoon throws darts; drawn and animated by raccoon.js -->
+      <button class="scene" type="button" aria-label="Throw another dart" title="Throw another dart">
+        <svg aria-hidden="true" focusable="false"></svg>
       </button>
     </div>
   </header>
@@ -111,5 +50,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="raccoon.js"></script>
 </body>
 </html>
