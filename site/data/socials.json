@@ -92,12 +92,12 @@
     },
     {
       "date": "2026-11-05",
-      "place": "TBD",
-      "kind": "tbd",
-      "link": "",
-      "location": "",
-      "notes": "",
-      "gif": ""
+      "place": "The Rose & Crown",
+      "kind": "venue",
+      "link": "https://www.therosepa.com/",
+      "location": "https://maps.app.goo.gl/5QgTwqwECrePvM49A",
+      "notes": "Matt's itching to throw some darts... 🎯",
+      "gif": "7CaD8QiTqveXS"
     },
     {
       "date": "2026-11-12",
@@ -169,7 +169,7 @@
       "link": "https://barunderdogpa.com/",
       "location": "https://maps.app.goo.gl/H1s5HYzt9L7pCuy9A",
       "visited": true,
-      "happy_hour": "weekdays 4pm-5:30pm",
+      "happy_hour": "weekdays 4-5:30pm",
       "happy_hour_notes": "$10 cocktails from a select menu",
       "happy_hour_menu": "https://barunderdogpa.com/content/bar-underdog-menu-october-26.pdf"
     },
@@ -180,6 +180,15 @@
       "visited": false,
       "happy_hour": "Mon-Fri 4-6pm",
       "happy_hour_notes": "",
+      "happy_hour_menu": ""
+    },
+    {
+      "name": "Dutch Goose",
+      "link": "https://www.dutchgoose.net/",
+      "location": "https://maps.app.goo.gl/egrHqc83HU4m4UPA9",
+      "visited": true,
+      "happy_hour": "weekdays 3-6pm",
+      "happy_hour_notes": "Discounted draft and pitcher specials (historically $15 beer pitchers or select pint/pitcher deals)",
       "happy_hour_menu": ""
     },
     {
