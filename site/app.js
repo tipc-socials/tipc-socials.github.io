@@ -108,16 +108,33 @@
     if (playing) playing.catch(() => {});
   }
 
-  // A Giphy GIF as a small looping video; hovering enlarges it.
+  // A Giphy GIF as a small looping video; hovering enlarges it, and so does
+  // tapping (for touch screens). Tapping it again or anywhere else shrinks it.
+  let openGif = null;
+
+  function setGifOpen(button, open) {
+    button.classList.toggle("open", open);
+    button.setAttribute("aria-expanded", String(open));
+    if (open) openGif = button;
+    else if (openGif === button) openGif = null;
+    if (reduceMotion) {
+      const video = button.querySelector("video");
+      if (open) playQuietly(video);
+      else video.pause();
+    }
+  }
+
+  document.addEventListener("click", (event) => {
+    if (openGif && !openGif.contains(event.target)) setGifOpen(openGif, false);
+  });
+
   function gifThumb(id) {
     if (!/^[A-Za-z0-9]+$/.test(id || "")) return null;
-    const a = el("a", {
+    const button = el("button", {
       class: "gif",
-      href: `https://giphy.com/gifs/${id}`,
-      target: "_blank",
-      rel: "noopener",
-      "aria-label": "GIF (opens on Giphy)",
-      title: "View on Giphy",
+      type: "button",
+      "aria-label": "Enlarge GIF",
+      "aria-expanded": "false",
     });
     const video = document.createElement("video");
     video.muted = true;
@@ -126,17 +143,22 @@
     video.preload = "none";
     video.dataset.gif = id;
     video.setAttribute("aria-hidden", "true");
+    button.addEventListener("click", () => {
+      const open = !button.classList.contains("open");
+      if (open && openGif) setGifOpen(openGif, false);
+      setGifOpen(button, open);
+    });
     if (reduceMotion) {
       const play = () => playQuietly(video);
-      const stop = () => video.pause();
-      a.addEventListener("mouseenter", play);
-      a.addEventListener("focus", play);
-      a.addEventListener("mouseleave", stop);
-      a.addEventListener("blur", stop);
+      const stop = () => { if (!button.classList.contains("open")) video.pause(); };
+      button.addEventListener("mouseenter", play);
+      button.addEventListener("focus", play);
+      button.addEventListener("mouseleave", stop);
+      button.addEventListener("blur", stop);
     }
-    a.append(video);
+    button.append(video);
     gifObserver.observe(video);
-    return a;
+    return button;
   }
 
   function placeText(s) {

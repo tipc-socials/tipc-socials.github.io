@@ -315,7 +315,15 @@ main.wrap { padding-top: 44px; }
   position: relative;
   display: block;
   line-height: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.gif.open { cursor: zoom-out; }
 
 .gif video {
   display: block;
@@ -328,10 +336,20 @@ main.wrap { padding-top: 44px; }
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.gif:hover,
+/* Hover only where it's real; on touch screens a tap would leave it stuck */
+@media (hover: hover) {
+  .gif:hover { z-index: 5; }
+
+  .gif:hover video {
+    transform: scale(2.6);
+    box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.45);
+  }
+}
+
+.gif.open,
 .gif:focus-visible { z-index: 5; }
 
-.gif:hover video,
+.gif.open video,
 .gif:focus-visible video {
   transform: scale(2.6);
   box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.45);
